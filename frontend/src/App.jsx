@@ -1,17 +1,19 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import Home from "./pages/Collection";
-import Home from "./pages/About";
-import Home from "./pages/Orders";
-import Home from "./pages/Contact";
-import Home from "./pages/Product";
-import Home from "./pages/Cart";
-import Home from "./pages/Login";
-import Home from "./pages/PlaceOrder";
+import Collection from "./pages/Collection";
+import About from "./pages/About";
+import Orders from "./pages/Orders";
+import Contact from "./pages/Contact";
+import Product from "./pages/Product";
+import Cart from "./pages/Cart";
+import Login from "./pages/Login";
+import PlaceOrder from "./pages/PlaceOrder";
+import NavBar from "./components/NavBar";
 
 const App = () => {
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
+      <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/collection" element={<Collection />} />
