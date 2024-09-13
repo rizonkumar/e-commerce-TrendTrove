@@ -69,43 +69,52 @@ const NavBar = () => {
       </div>
       {/* Sidebar menu for small screens */}
       <div
-        className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${
-          visible ? "w-full" : "w-0"
+        className={`fixed top-0 right-0 bottom-0 w-full bg-white transition-all duration-300 ease-in-out z-50 ${
+          visible ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex flex-col text-gray-600">
+        <div className="flex flex-col h-full">
           <div
-            className="flex items-center gap-4 p-3 cursor-pointer"
+            className="flex items-center gap-4 p-5 cursor-pointer border-b"
             onClick={toggleSidebar}
           >
-            <img
-              src={assets.dropdown_icon}
-              alt="dropdown-icon"
-              className="h-4 rotate-180"
-            />
-            <p className="">Back</p>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            <p className="text-lg">Back</p>
           </div>
-          <NavLink onClick={toggleSidebar} to="/" className="py-2 pl-6 border">
+          <NavLink onClick={toggleSidebar} to="/" className="py-4 px-5 text-lg">
             HOME
           </NavLink>
           <NavLink
             onClick={toggleSidebar}
             to="/collection"
-            className="py-2 pl-6 border"
+            className="py-4 px-5 text-lg"
           >
             COLLECTION
           </NavLink>
           <NavLink
             onClick={toggleSidebar}
             to="/about"
-            className="py-2 pl-6 border"
+            className="py-4 px-5 text-lg"
           >
             ABOUT
           </NavLink>
           <NavLink
             onClick={toggleSidebar}
             to="/contact"
-            className="py-2 pl-6 border"
+            className="py-4 px-5 text-lg"
           >
             CONTACT
           </NavLink>
@@ -114,5 +123,4 @@ const NavBar = () => {
     </div>
   );
 };
-
 export default NavBar;
