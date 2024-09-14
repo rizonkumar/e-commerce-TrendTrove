@@ -27,79 +27,118 @@ const Cart = () => {
     return (
       <div className="border-t pt-14 text-center">
         <Title text1="Your" text2="Cart" />
-        <p className="mt-8 text-lg text-gray-600">Your cart is empty.</p>
-        <Link
-          to="/collection"
-          className="mt-4 inline-block rounded-full bg-black px-6 py-2 text-white transition-colors hover:bg-gray-800"
-        >
-          Continue Shopping
-        </Link>
+        <div className="mt-12 flex flex-col items-center">
+          <svg
+            className="h-24 w-24 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          <p className="mt-4 text-xl font-semibold text-gray-800">
+            Your cart is empty
+          </p>
+          <p className="mt-2 text-gray-600">
+            Looks like you haven't added any items to your cart yet.
+          </p>
+          <Link
+            to="/collection"
+            className="mt-8 inline-block rounded-full bg-black px-8 py-3 text-white transition-colors hover:bg-gray-800"
+          >
+            Start Shopping
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="border-t pt-14">
-      <div className="mb-6 flex items-center">
+      <div className="mb-8">
         <Title text1="Your" text2="Cart" />
-        <div className="ml-4 hidden h-[2px] w-12 bg-gray-700 sm:block"></div>
       </div>
-      <div>
+      <div className="space-y-6">
         {cartData.map((item, index) => {
           const productData = products.find((p) => p._id === item._id);
           return (
             <div
-              className="grid grid-cols-[4fr_0.5fr_0.5fr] items-center gap-4 border-b border-t py-4 text-gray-700 sm:grid-cols-[4fr_2fr_0.5fr]"
+              className="flex flex-col items-center justify-between gap-4 border-b pb-6 sm:flex-row"
               key={index}
             >
-              <div className="flex items-start gap-6">
+              <div className="flex items-center gap-6">
                 <img
                   src={productData.image[0]}
                   alt={productData.name}
-                  className="w-16 sm:w-20"
+                  className="h-20 w-20 object-cover"
                 />
                 <div>
-                  <p className="text-xs font-medium sm:text-lg">
-                    {productData.name}
+                  <p className="text-lg font-medium">{productData.name}</p>
+                  <p className="mt-1 text-gray-600">Size: {item.size}</p>
+                  <p className="mt-1 font-semibold text-gray-800">
+                    {currency}
+                    {productData.price}
                   </p>
-                  <div className="mt-2 flex items-center gap-5">
-                    <p className="">
-                      {currency}
-                      {productData.price}
-                    </p>
-                    <p className="border bg-slate-50 px-2 sm:px-3 sm:py-1">
-                      {item.size}
-                    </p>
-                  </div>
                 </div>
               </div>
-              <input
-                type="number"
-                min={1}
-                value={item.quantity}
-                className="w-16 border px-1 py-1 text-center sm:w-20 sm:px-2"
-                onChange={(e) =>
-                  updateQuantity(
-                    item._id,
-                    item.size,
-                    Number(e.target.value) || 0,
-                  )
-                }
-              />
-              <button
-                className="text-gray-500 transition-colors hover:text-red-500"
-                onClick={() => updateQuantity(item._id, item.size, 0)}
-              >
-                <FaTrash className="h-4 w-4 sm:h-5 sm:w-5" />
-              </button>
+              <div className="flex items-center gap-6">
+                <div className="flex items-center rounded border">
+                  <button
+                    className="bg-gray-100 px-3 py-1 hover:bg-gray-200"
+                    onClick={() =>
+                      updateQuantity(
+                        item._id,
+                        item.size,
+                        Math.max(1, item.quantity - 1),
+                      )
+                    }
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    min={1}
+                    value={item.quantity}
+                    className="w-12 border-x py-1 text-center"
+                    onChange={(e) =>
+                      updateQuantity(
+                        item._id,
+                        item.size,
+                        Number(e.target.value) || 1,
+                      )
+                    }
+                  />
+                  <button
+                    className="bg-gray-100 px-3 py-1 hover:bg-gray-200"
+                    onClick={() =>
+                      updateQuantity(item._id, item.size, item.quantity + 1)
+                    }
+                  >
+                    +
+                  </button>
+                </div>
+                <button
+                  className="text-gray-500 transition-colors hover:text-red-500"
+                  onClick={() => updateQuantity(item._id, item.size, 0)}
+                >
+                  <FaTrash className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           );
         })}
       </div>
-      <div className="my-20 flex justify-end">
+      <div className="mt-12 flex justify-end">
         <div className="w-full sm:w-[450px]">
           <CartTotal />
-          {/* Proceed to Checkout button implementation placeholder */}
+          <button className="mt-6 w-full rounded-full bg-black py-3 text-white transition-colors hover:bg-gray-800">
+            Proceed to Checkout
+          </button>
         </div>
       </div>
     </div>
