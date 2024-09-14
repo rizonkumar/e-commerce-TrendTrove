@@ -5,7 +5,7 @@ import { ShopContext } from "../context/ShopContext";
 
 const NavBar = () => {
   const [visible, setVisible] = useState(false);
-  const { setShowSearch } = useContext(ShopContext);
+  const { setShowSearch, getCartTotal } = useContext(ShopContext);
 
   const toggleSidebar = () => {
     setVisible(!visible);
@@ -62,7 +62,7 @@ const NavBar = () => {
             className="w-5 min-w-5"
           />
           <p className="absolute bottom-[-5px] right-[-5px] aspect-square w-4 rounded-full bg-black text-center text-[8px] leading-4 text-white">
-            10
+            {getCartTotal()}
           </p>
         </Link>
         <img
