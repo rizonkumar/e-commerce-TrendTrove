@@ -5,9 +5,9 @@ import {
   FaGithub,
   FaTwitter,
   FaBriefcase,
+  FaHeart,
 } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
-import { FaHeart } from "react-icons/fa";
 
 const Footer = () => {
   const socialLinks = [
@@ -19,50 +19,37 @@ const Footer = () => {
     { icon: <FaGithub />, url: "https://github.com/rizonkumar/" },
     { icon: <FaTwitter />, url: "https://x.com/RizonKumar" },
     { icon: <MdEmail />, url: "mailto:rizon.kumar.rahi@gmail.com" },
-    {
-      icon: <FaBriefcase />,
-      url: "https://rizonkumarrahi.in/",
-    },
+    { icon: <FaBriefcase />, url: "https://rizonkumarrahi.in/" },
   ];
 
   return (
-    <footer className="bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+    <footer className="bg-gray-100 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-3">
           <div className="md:col-span-1">
-            <img src={assets?.logo} className="mb-4 w-32" alt="logo" />
-            <p className="text-gray-600 mb-4">
+            <img src={assets?.logo} className="mb-4 w-32" alt="Forever logo" />
+            <p className="mb-4 text-gray-600">
               Elevating your style with curated fashion collections and
               exceptional customer service.
             </p>
           </div>
           <div className="md:col-span-1">
-            <h3 className="text-lg font-semibold mb-4">COMPANY</h3>
+            <h3 className="mb-4 text-lg font-semibold">COMPANY</h3>
             <ul className="space-y-2 text-gray-600">
-              <li>
-                <a href="/" className="hover:text-gray-900">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="/about" className="hover:text-gray-900">
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="/delivery" className="hover:text-gray-900">
-                  Delivery
-                </a>
-              </li>
-              <li>
-                <a href="/privacy-policy" className="hover:text-gray-900">
-                  Privacy Policy
-                </a>
-              </li>
+              {["Home", "About", "Delivery", "Privacy Policy"].map((item) => (
+                <li key={item}>
+                  <a
+                    href={`/${item.toLowerCase().replace(" ", "-")}`}
+                    className="transition-colors duration-300 hover:text-gray-900"
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
           <div className="md:col-span-1">
-            <h3 className="text-lg font-semibold mb-4">GET IN TOUCH</h3>
+            <h3 className="mb-4 text-lg font-semibold">GET IN TOUCH</h3>
             <div className="flex flex-wrap gap-4">
               {socialLinks.map((link, index) => (
                 <a
@@ -70,7 +57,7 @@ const Footer = () => {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-600 hover:text-gray-900 text-2xl flex items-center"
+                  className="text-2xl text-gray-600 transition-colors duration-300 hover:text-gray-900"
                 >
                   {link.icon}
                 </a>
@@ -78,8 +65,8 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <hr className="border-gray-300" />
-        <p className="text-center text-gray-600 text-sm py-4">
+        <hr className="mb-4 border-gray-300" />
+        <p className="text-center text-sm text-gray-600">
           © 2024 Made with <FaHeart className="inline text-red-500" /> by Rizon
           Kumar Rahi.
         </p>
