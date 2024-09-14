@@ -76,10 +76,6 @@ const Collection = () => {
     sortProducts();
   }, [sortType]);
 
-  useEffect(() => {
-    setFilterProducts(products);
-  }, [products]);
-
   return (
     <div className="flex flex-col gap-6 border-t pt-10 lg:flex-row">
       {/* Filter Options */}
