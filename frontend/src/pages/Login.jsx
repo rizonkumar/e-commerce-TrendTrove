@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { assets } from "../assets/assets";
+import { Link } from "react-router-dom";
 
 const Login = () => {
-  const [currentState, setCurrentState] = useState("Login");
+  const [currentState, setCurrentState] = useState("Sign Up");
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
+    // Handle form submission
   };
 
   return (
@@ -18,9 +20,7 @@ const Login = () => {
             alt="Forever Logo"
           />
           <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            {currentState === "Login"
-              ? "Sign in to your account"
-              : "Create a new account"}
+            {currentState === "Login" ? "Login" : "Create Account"}
           </h2>
         </div>
         <form onSubmit={onSubmitHandler} className="mt-8 space-y-6">
@@ -53,29 +53,52 @@ const Login = () => {
             </div>
           </div>
 
+          <div className="text-sm text-gray-600">
+            By continuing, you agree to Forever's{" "}
+            <Link to="/terms" className="text-indigo-600 hover:text-indigo-500">
+              Terms of Use
+            </Link>{" "}
+            and{" "}
+            <Link
+              to="/privacy"
+              className="text-indigo-600 hover:text-indigo-500"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </div>
+
           <div>
             <button className="group relative flex w-full justify-center rounded-md border border-transparent bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-              {currentState === "Login" ? "Sign In" : "Sign Up"}
+              {currentState === "Login" ? "LOGIN" : "CONTINUE"}
             </button>
           </div>
         </form>
 
-        <div className="mt-4 flex items-center justify-between text-sm">
-          <a
-            href="#"
-            className="font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            Forgot your password?
-          </a>
-          <a
-            href="#"
-            onClick={() =>
-              setCurrentState(currentState === "Login" ? "Sign Up" : "Login")
-            }
-            className="font-medium text-indigo-600 hover:text-indigo-500"
-          >
-            {currentState === "Login" ? "Create Account" : "Login Here"}
-          </a>
+        <div className="mt-4 text-center">
+          {currentState === "Login" ? (
+            <p className="text-sm text-gray-600">
+              New to Forever?{" "}
+              <a
+                href="#"
+                onClick={() => setCurrentState("Sign Up")}
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Create an account
+              </a>
+            </p>
+          ) : (
+            <p className="text-sm text-gray-600">
+              Existing User?{" "}
+              <a
+                href="#"
+                onClick={() => setCurrentState("Login")}
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Log in
+              </a>
+            </p>
+          )}
         </div>
       </div>
     </div>
