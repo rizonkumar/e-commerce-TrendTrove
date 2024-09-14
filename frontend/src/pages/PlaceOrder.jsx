@@ -2,83 +2,90 @@ import { useContext, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
-import { assets } from "../assets/assets";
+import { FaStripe, FaCcAmazonPay, FaMoneyBillWave } from "react-icons/fa";
+import { MdLocationOn, MdEmail, MdPhone, MdPerson } from "react-icons/md";
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState("cod");
   const { navigate } = useContext(ShopContext);
 
-  const renderInputField = (type, placeholder, className = "") => (
-    <input
-      type={type}
-      placeholder={placeholder}
-      className={`w-full rounded-md border border-gray-300 px-3.5 py-1.5 ${className}`}
-    />
-  );
-
-  const renderPaymentMethod = (methodName, logo, text) => (
-    <div
-      onClick={() => setMethod(methodName)}
-      className="flex cursor-pointer items-center gap-3 border p-2 px-3"
-    >
-      <p
-        className={`h-3.5 min-w-3.5 rounded-full border ${
-          method === methodName ? "bg-green-400" : ""
-        }`}
-      ></p>
-      {logo ? (
-        <img src={logo} alt={methodName} className="mx-4 h-5" />
-      ) : (
-        <p className="mx-4 text-sm font-medium text-gray-500">{text}</p>
+  const renderInputField = (type, placeholder, icon, className = "") => (
+    <div className="relative">
+      <input
+        type={type}
+        placeholder={placeholder}
+        className={`w-full rounded-md border border-gray-300 px-3.5 py-2 pl-10 ${className}`}
+      />
+      {icon && (
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+          {icon}
+        </span>
       )}
     </div>
   );
 
+  const renderPaymentMethod = (methodName, icon, text) => (
+    <div
+      onClick={() => setMethod(methodName)}
+      className={`flex cursor-pointer items-center gap-3 rounded-md border p-3 transition-colors ${
+        method === methodName
+          ? "border-green-500 bg-green-50"
+          : "hover:bg-gray-50"
+      }`}
+    >
+      <div
+        className={`text-2xl ${method === methodName ? "text-green-500" : "text-gray-400"}`}
+      >
+        {icon}
+      </div>
+      <p className="text-sm font-medium text-gray-700">{text}</p>
+    </div>
+  );
+
   return (
-    <div className="flex min-h-[80vh] flex-col justify-between gap-4 border-t pt-5 sm:flex-row sm:pt-14">
+    <div className="flex min-h-[80vh] flex-col justify-between gap-8 border-t pt-8 lg:flex-row">
       {/* Left Side Section */}
       <div className="flex w-full flex-col gap-4 sm:max-w-[480px]">
         <div className="my-3 text-xl sm:text-2xl">
           <Title text1={"Delivery"} text2={"Information"} />
         </div>
         <div className="flex gap-3">
-          {renderInputField("text", "First Name")}
-          {renderInputField("text", "Last Name")}
+          {renderInputField("text", "First Name", <MdPerson />)}
+          {renderInputField("text", "Last Name", <MdPerson />)}
         </div>
-        {renderInputField("email", "Email Address")}
-        {renderInputField("text", "Street Address")}
+        {renderInputField("email", "Email Address", <MdEmail />)}
+        {renderInputField("text", "Street Address", <MdLocationOn />)}
         <div className="flex gap-3">
-          {renderInputField("text", "City")}
-          {renderInputField("text", "State")}
+          {renderInputField("text", "City", <MdLocationOn />)}
+          {renderInputField("text", "State", <MdLocationOn />)}
         </div>
         <div className="flex gap-3">
-          {renderInputField("number", "Zipcode")}
-          {renderInputField("text", "Country")}
+          {renderInputField("number", "Zipcode", <MdLocationOn />)}
+          {renderInputField("text", "Country", <MdLocationOn />)}
         </div>
-        {renderInputField("number", "Contact Number")}
+        {renderInputField("tel", "Contact Number", <MdPhone />)}
       </div>
 
       {/* Right Side Section */}
-      <div className="mt-8">
-        <div className="mt-8 min-w-80">
-          <CartTotal />
-        </div>
-        <div className="mt-12">
-          <Title text1={"PAYMENT"} text2={"METHOD"} />
-          {/* Payment Method Selection */}
-          <div className="flex flex-col gap-3 lg:flex-row">
-            {renderPaymentMethod("stripe", assets.stripe_logo)}
-            {renderPaymentMethod("razorpay", assets.razorpay_logo)}
-            {renderPaymentMethod("cod", null, "CASH ON DELIVERY")}
+      <div className="w-full lg:w-1/2">
+        <CartTotal />
+        <div className="mt-8">
+          <Title text1="PAYMENT" text2="METHOD" />
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            {renderPaymentMethod("stripe", <FaStripe />, "Stripe")}
+            {renderPaymentMethod("razorpay", <FaCcAmazonPay />, "Razorpay")}
+            {renderPaymentMethod(
+              "cod",
+              <FaMoneyBillWave />,
+              "Cash on Delivery",
+            )}
           </div>
-          <div className="mt-8 w-full text-end">
-            <button
-              onClick={() => navigate("/orders")}
-              className="bg-black px-16 py-3 text-sm text-white"
-            >
-              PLACE ORDER
-            </button>
-          </div>
+          <button
+            onClick={() => navigate("/orders")}
+            className="mt-8 w-full rounded-md bg-black py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
+          >
+            PLACE ORDER
+          </button>
         </div>
       </div>
     </div>
