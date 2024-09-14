@@ -36,7 +36,7 @@ const Footer = () => {
           <div className="md:col-span-1">
             <h3 className="mb-4 text-lg font-semibold">COMPANY</h3>
             <ul className="space-y-2 text-gray-600">
-              {["Home", "About", "Delivery", "Privacy Policy"].map((item) => (
+              {["Home", "About", "Contact", "Our Policy"].map((item) => (
                 <li key={item}>
                   <a
                     href={`/${item.toLowerCase().replace(" ", "-")}`}

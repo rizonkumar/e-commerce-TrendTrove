@@ -3,11 +3,13 @@ import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
 import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { cartItems, updateQuantity, products, currency } =
     useContext(ShopContext);
   const [cartData, setCartData] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const tempData = Object.entries(cartItems)
@@ -102,7 +104,10 @@ const Cart = () => {
         <div className="lg:w-1/3">
           <div className="sticky top-8 rounded-lg bg-gray-50 p-6 shadow-sm">
             <CartTotal />
-            <button className="mt-6 w-full rounded-full bg-black py-3 text-white transition-colors hover:bg-gray-800">
+            <button
+              className="mt-6 w-full rounded-full bg-black py-3 text-white transition-colors hover:bg-gray-800"
+              onClick={() => navigate("/place-order")}
+            >
               Proceed to Checkout
             </button>
           </div>

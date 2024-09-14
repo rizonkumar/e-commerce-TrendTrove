@@ -1,7 +1,16 @@
-import { useContext, useState } from "react";
-import { assets } from "../assets/assets";
+import { useState, useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
+import { assets } from "../assets/assets";
+import {
+  FaUser,
+  FaShoppingBag,
+  FaSignOutAlt,
+  FaSearch,
+  FaBars,
+  FaTimes,
+} from "react-icons/fa";
+import ProfileDropdown from "./ProfileDropdown";
 
 const NavBar = () => {
   const [visible, setVisible] = useState(false);
@@ -35,28 +44,11 @@ const NavBar = () => {
         </NavLink>
       </ul>
       <div className="flex items-center gap-6">
-        <img
-          src={assets?.search_icon}
-          className="w-5 cursor-pointer"
-          alt="search-icon"
+        <FaSearch
+          className="h-5 w-5 cursor-pointer"
           onClick={() => setShowSearch(true)}
         />
-        <div className="group relative">
-          <Link to="/login">
-            <img
-              src={assets?.profile_icon}
-              alt="profile-icon"
-              className="w-5 cursor-pointer"
-            />
-          </Link>
-          <div className="dropdown-menu absolute right-0 hidden pt-4 group-hover:block">
-            <div className="flex w-36 flex-col gap-2 rounded bg-slate-100 px-5 py-3 text-gray-500">
-              <p className="cursor-pointer hover:text-black">My Profile</p>
-              <p className="cursor-pointer hover:text-black">Orders</p>
-              <p className="cursor-pointer hover:text-black">Logout</p>
-            </div>
-          </div>
-        </div>
+        <ProfileDropdown />
         <Link to="/cart" className="relative">
           <img
             src={assets?.cart_icon}
@@ -67,10 +59,8 @@ const NavBar = () => {
             {getCartTotal()}
           </p>
         </Link>
-        <img
-          src={assets?.menu_icon}
-          className="w-5 cursor-pointer sm:hidden"
-          alt="menu-icon"
+        <FaBars
+          className="h-5 w-5 cursor-pointer sm:hidden"
           onClick={toggleSidebar}
         />
       </div>
@@ -82,24 +72,11 @@ const NavBar = () => {
       >
         <div className="flex h-full flex-col">
           <div
-            className="flex cursor-pointer items-center gap-4 border-b p-5"
+            className="flex cursor-pointer items-center justify-between border-b p-5"
             onClick={toggleSidebar}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-            <p className="text-lg">Back</p>
+            <p className="text-lg">Menu</p>
+            <FaTimes className="h-6 w-6" />
           </div>
           <NavLink onClick={toggleSidebar} to="/" className="px-5 py-4 text-lg">
             HOME
@@ -125,9 +102,35 @@ const NavBar = () => {
           >
             CONTACT
           </NavLink>
+          <NavLink
+            onClick={toggleSidebar}
+            to="/profile"
+            className="flex items-center px-5 py-4 text-lg"
+          >
+            <FaUser className="mr-2" />
+            My Profile
+          </NavLink>
+          <NavLink
+            onClick={toggleSidebar}
+            to="/orders"
+            className="flex items-center px-5 py-4 text-lg"
+          >
+            <FaShoppingBag className="mr-2" />
+            Orders
+          </NavLink>
+          <button
+            onClick={() => {
+              /* Handle logout */
+            }}
+            className="flex w-full items-center px-5 py-4 text-left text-lg"
+          >
+            <FaSignOutAlt className="mr-2" />
+            Logout
+          </button>
         </div>
       </div>
     </div>
   );
 };
+
 export default NavBar;
