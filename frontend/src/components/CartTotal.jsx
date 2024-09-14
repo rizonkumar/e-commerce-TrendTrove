@@ -1,36 +1,42 @@
 import React, { useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "./Title";
+import { FaRupeeSign } from "react-icons/fa";
 
-// when the cart is empty what should be displayed in the cart total?
 const CartTotal = () => {
   const { currency, delivery_fee, getCartAmount } = useContext(ShopContext);
+  const subtotal = getCartAmount();
+  const total = subtotal + delivery_fee;
+
   return (
     <div className="w-full">
-      <div className="text-2xl">
+      <div className="mb-6 flex items-center">
         <Title text1="Total" text2="Amount" />
+        <div className="ml-4 hidden h-[2px] w-12 bg-gray-700 sm:block"></div>
       </div>
       <div className="mt-2 flex flex-col gap-2 text-sm">
         <div className="flex justify-between">
-          <p className="">Subtotal</p>
-          <p className="">
-            {currency} {getCartAmount()}.00
+          <p>Subtotal</p>
+          <p className="flex items-center">
+            <FaRupeeSign className="mr-1" />
+            {subtotal.toFixed(2)}
           </p>
         </div>
         <hr />
         <div className="flex justify-between">
-          <p className=""> Shipping Fee</p>
-          <p className="">
-            {currency} {delivery_fee}.00
+          <p>Shipping Fee</p>
+          <p className="flex items-center">
+            <FaRupeeSign className="mr-1" />
+            {delivery_fee.toFixed(2)}
           </p>
         </div>
         <hr />
-        <div className="flex justify-between">
-          <b>Total</b>
-          <b>
-            {currency}{" "}
-            {getCartAmount() === 0 ? 0 : getCartAmount() + delivery_fee}.00
-          </b>
+        <div className="flex justify-between font-bold">
+          <p>Total</p>
+          <p className="flex items-center">
+            <FaRupeeSign className="mr-1" />
+            {total.toFixed(2)}
+          </p>
         </div>
       </div>
     </div>
