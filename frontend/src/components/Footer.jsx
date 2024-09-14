@@ -23,7 +23,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-gray-100 px-4 py-12 sm:px-6 lg:px-8">
+    <footer className="px-4 py-12 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-3">
           <div className="md:col-span-1">
