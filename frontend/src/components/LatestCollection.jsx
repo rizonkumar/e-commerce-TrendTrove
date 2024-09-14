@@ -22,18 +22,28 @@ const LatestCollection = () => {
         </p>
       </div>
 
-      {/* Rendering latest products */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 gap-y-8">
-        {latestProducts.map((product, index) => (
-          <ProductItem
-            key={index}
-            id={product._id}
-            image={product.image}
-            name={product.name}
-            price={product.price}
-          />
-        ))}
-      </div>
+      {latestProducts.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 gap-y-8">
+          {latestProducts.map((product, index) => (
+            <ProductItem
+              key={product._id || index}
+              id={product._id}
+              image={product.image}
+              name={product.name}
+              price={product.price}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="text-center py-12">
+          <p className="text-xl text-gray-600">
+            No latest collections available at the moment.
+          </p>
+          <p className="mt-2 text-gray-500">
+            Check back soon for new arrivals!
+          </p>
+        </div>
+      )}
     </div>
   );
 };
