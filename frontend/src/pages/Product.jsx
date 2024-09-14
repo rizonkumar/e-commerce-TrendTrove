@@ -7,120 +7,138 @@ import RelatedProduct from "../components/RelatedProduct";
 const Product = () => {
   const { productId } = useParams();
   const { products, currency } = useContext(ShopContext);
-  const [productData, setProductData] = useState(false);
+  const [productData, setProductData] = useState(null);
   const [image, setImage] = useState("");
   const [size, setSize] = useState("");
 
-  const fetchProductData = () => {
-    products.map((item) => {
-      if (item._id === productId) {
-        setProductData(item);
-        setImage(item.image[0]);
-        console.log(item);
-        return null;
-      }
-    });
-  };
-
   useEffect(() => {
+    const fetchProductData = () => {
+      const product = products.find((item) => item._id === productId);
+      if (product) {
+        setProductData(product);
+        setImage(product.image[0]);
+      }
+    };
     fetchProductData();
   }, [productId, products]);
 
-  return productData ? (
+  if (!productData) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
+  return (
     <div className="border-t-2 pt-10 opacity-100 transition-opacity duration-500 ease-in">
       {/* Product Details */}
-      <div className="flex flex-col gap-12 sm:flex-row sm:gap-12">
+      <div className="flex flex-col gap-12 lg:flex-row">
         {/* Product Image */}
         <div className="flex flex-1 flex-col-reverse gap-3 sm:flex-row">
-          <div className="flex w-full flex-col justify-between overflow-x-auto sm:w-[18.7%] sm:flex-col sm:justify-normal sm:overflow-y-scroll">
+          <div className="scrollbar-thin scrollbar-thumb-gray-300 flex gap-2 overflow-x-auto sm:h-[500px] sm:w-1/5 sm:flex-col sm:overflow-y-auto">
             {productData.image.map((item, index) => (
               <img
                 src={item}
                 key={index}
-                alt={productData.name}
-                className="w-[24%] flex-shrink-0 cursor-pointer sm:mb-3 sm:w-full"
+                alt={`${productData.name} view ${index + 1}`}
+                className="h-20 w-20 cursor-pointer object-cover transition-opacity duration-300 hover:opacity-80"
                 onClick={() => setImage(item)}
               />
             ))}
           </div>
-          <div className="w-full sm:w-[80%]">
-            <img src={image} alt={productData.name} className="h-auto w-full" />
+          <div className="sm:w-4/5">
+            <img
+              src={image}
+              alt={productData.name}
+              className="h-auto w-full rounded-lg object-cover shadow-lg"
+            />
           </div>
         </div>
         {/* Product Information */}
         <div className="flex-1">
-          <h1 className="mt-2 text-2xl font-medium">{productData.name}</h1>
-          <div className="mt-2 flex items-center gap-1">
-            <img src={assets.star_icon} alt="star-1" className="5 w-3" />
-            <img src={assets.star_icon} alt="star-2" className="5 w-3" />
-            <img src={assets.star_icon} alt="star-3" className="5 w-3" />
-            <img src={assets.star_icon} alt="star-4" className="5 w-3" />
-            <img src={assets.star_dull_icon} alt="star-5" className="5 w-3" />
-            <p className="pl-2">(122)</p>
+          <h1 className="mb-2 text-3xl font-semibold">{productData.name}</h1>
+          <div className="mb-4 flex items-center gap-1">
+            {[...Array(5)].map((_, index) => (
+              <img
+                key={index}
+                src={index < 4 ? assets.star_icon : assets.star_dull_icon}
+                alt={`star-${index + 1}`}
+                className="h-4 w-4"
+              />
+            ))}
+            <span className="ml-2 text-sm text-gray-600">(721 reviews)</span>
           </div>
-          <p className="mt-3 text-2xl font-medium">
+          <p className="mb-4 text-2xl font-medium">
             {currency}
             {productData.price}
           </p>
-          <p className="mt-5 text-gray-500 md:w-4/5">
-            {productData.description}
-          </p>
-          <div className="my-8 flex flex-col gap-4">
-            <p>Select Size</p>
-            <div className="flex gap-2">
-              {productData.sizes.map((item, index) => (
+          <p className="mb-6 text-gray-700">{productData.description}</p>
+          <div className="mb-6">
+            <p className="mb-2 font-medium">Select Size</p>
+            <div className="flex flex-wrap gap-2">
+              {productData.sizes.map((item) => (
                 <button
-                  key={index}
+                  key={item}
                   onClick={() => setSize(item)}
-                  className={`rounded-md bg-gray-100 px-4 py-2 text-gray-700 hover:bg-gray-200 ${item === size ? "border-orange-500 bg-gray-200 text-gray-900" : ""}`}
+                  className={`rounded-md px-4 py-2 text-sm ${
+                    item === size
+                      ? "bg-black text-white"
+                      : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                  } transition-colors duration-300`}
                 >
                   {item}
                 </button>
               ))}
             </div>
           </div>
-          <button className="active:bg-gray-700-lg rounded bg-black px-8 py-3 text-sm text-white">
+          <button className="w-full rounded-md bg-black px-8 py-3 text-white transition-colors duration-300 hover:bg-gray-800 sm:w-auto">
             ADD TO CART
           </button>
-          <hr className="mt-8 sm:w-4/5" />
-          <div className="mt-5 flex flex-col gap-1 text-sm text-gray-500">
-            <p>100% Original Product</p>
-            <p>Cash on Delivery is available on this product</p>
-            <p>Easy return and exchange within 30 days</p>
+          <hr className="my-8" />
+          <div className="space-y-2 text-sm text-gray-600">
+            <p>✓ 100% Original Product</p>
+            <p>✓ Cash on Delivery available</p>
+            <p>✓ Easy 30-day returns and exchanges</p>
           </div>
         </div>
       </div>
       {/* Description and Reviews Section */}
-      <div className="mt-20">
-        <div className="flex">
-          <b className="border px-5 py-3 text-sm">Description</b>
-          <p className="border px-5 py-3 text-sm">Reviews (122)</p>
+      <div className="mt-16">
+        <div className="flex border-b">
+          <button className="border-b-2 border-black px-6 py-3 text-sm font-medium">
+            Description
+          </button>
+          <button className="px-6 py-3 text-sm text-gray-600 transition-colors duration-300 hover:text-black">
+            Reviews (721)
+          </button>
         </div>
-        <div className="flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500">
-          {/* i have attached a response (assets.js file) of one of the id can we increase deciption by any changce as already we have add descripotion above, I need below also but no the same data */}
+        <div className="space-y-4 py-6 text-gray-700">
           <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsa,
-            quibusdam repudiandae incidunt dolore est laborum officia non
-            explicabo dignissimos? Nulla, maxime? Excepturi modi atque
-            necessitatibus delectus non aspernatur quisquam dolorem quasi earum
-            laudantium minima dicta neque, qui corporis inventore
-            exercitationem.
+            Experience unparalleled comfort and style with our{" "}
+            {productData.name}. Crafted from premium materials, this piece
+            combines fashion-forward design with everyday practicality.
           </p>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut id
-            numquam sit deserunt illo? Amet molestiae ut eaque. Minima,
-            mollitia.
+            Whether you're heading to the office, meeting friends for brunch, or
+            enjoying a casual day out, this versatile item adapts effortlessly
+            to any occasion. Its thoughtful design ensures a perfect fit and
+            long-lasting durability.
           </p>
+          <ul className="list-inside list-disc space-y-2">
+            <li>High-quality, breathable fabric for all-day comfort</li>
+            <li>Stylish design that complements various outfits</li>
+            <li>Easy care instructions for long-lasting wear</li>
+            <li>Available in multiple sizes to ensure the perfect fit</li>
+          </ul>
         </div>
       </div>
-      {/* Diplsay Related Products Section */}
+      {/* Related Products Section */}
       <RelatedProduct
         category={productData?.category}
         subCategory={productData?.subCategory}
       />
     </div>
-  ) : (
-    <div className="opacity-0"></div>
   );
 };
 
