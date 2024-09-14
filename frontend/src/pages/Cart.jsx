@@ -91,7 +91,9 @@ const Cart = () => {
         <div className="w-full sm:w-[450px]">
           <CartTotal />
           <div className="w-full text-end">
-            <button>Proceed to Checkout</button>
+            <button className="my-8 bg-black px-8 py-3 text-sm text-white">
+              Proceed to Checkout
+            </button>
           </div>
         </div>
       </div>
