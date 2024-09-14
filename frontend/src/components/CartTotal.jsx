@@ -11,7 +11,7 @@ const CartTotal = () => {
   return (
     <div className="w-full">
       <div className="mb-6">
-        <Title text1="Total" text2="Amount" />
+        <Title text1="TOTAL" text2="AMOUNT" />
       </div>
       <div className="mt-2 flex flex-col gap-2 text-sm">
         <div className="flex justify-between">

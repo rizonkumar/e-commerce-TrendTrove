@@ -6,7 +6,7 @@ import CartTotal from "../components/CartTotal";
 import { Link } from "react-router-dom";
 
 const Cart = () => {
-  const { products, currency, cartItems, updateQuantity } =
+  const { products, currency, cartItems, updateQuantity, navigate } =
     useContext(ShopContext);
   const [cartData, setCartData] = useState([]);
 
@@ -136,7 +136,7 @@ const Cart = () => {
       <div className="mt-12 flex justify-end">
         <div className="w-full sm:w-[450px]">
           <CartTotal />
-          <button className="mt-6 w-full rounded-full bg-black py-3 text-white transition-colors hover:bg-gray-800">
+          <button className="mt-6 w-full rounded-full bg-black py-3 text-white transition-colors hover:bg-gray-800" onClick={() => navigate("/place-order")}>
             Proceed to Checkout
           </button>
         </div>
