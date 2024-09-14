@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { assets } from "../assets/assets";
 import RelatedProduct from "../components/RelatedProduct";
+import { toast } from "react-toastify";
 
 const Product = () => {
   const { productId } = useParams();
@@ -10,6 +11,7 @@ const Product = () => {
   const [productData, setProductData] = useState(null);
   const [image, setImage] = useState("");
   const [size, setSize] = useState("");
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const fetchProductData = () => {
@@ -22,6 +24,22 @@ const Product = () => {
     fetchProductData();
   }, [productId, products]);
 
+  const incrementQuantity = () => setQuantity((prev) => prev + 1);
+  const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
+  const handleQuantityChange = (e) => {
+    const value = parseInt(e.target.value);
+    setQuantity(isNaN(value) || value < 1 ? 1 : value);
+  };
+
+  const handleAddToCart = () => {
+    if (!size) {
+      toast.error("Please Select Product Size");
+      return;
+    }
+    addToCart(productData._id, size, quantity);
+    toast.success("Item added to cart");
+  };
+
   if (!productData) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -32,7 +50,6 @@ const Product = () => {
 
   return (
     <div className="border-t-2 pt-10 opacity-100 transition-opacity duration-500 ease-in">
-      {/* Product Details */}
       <div className="flex flex-col gap-12 lg:flex-row">
         {/* Product Image */}
         <div className="flex flex-1 flex-col-reverse gap-3 sm:flex-row">
@@ -55,6 +72,7 @@ const Product = () => {
             />
           </div>
         </div>
+
         {/* Product Information */}
         <div className="flex-1">
           <h1 className="mb-2 text-3xl font-semibold">{productData.name}</h1>
@@ -92,8 +110,32 @@ const Product = () => {
               ))}
             </div>
           </div>
+          <div className="mb-4 flex items-center gap-4">
+            <p className="font-medium">Quantity:</p>
+            <div className="flex items-center rounded border">
+              <button
+                className="bg-gray-100 px-3 py-1 hover:bg-gray-200"
+                onClick={decrementQuantity}
+              >
+                -
+              </button>
+              <input
+                type="number"
+                min={1}
+                value={quantity}
+                onChange={handleQuantityChange}
+                className="w-12 border-x py-1 text-center"
+              />
+              <button
+                className="bg-gray-100 px-3 py-1 hover:bg-gray-200"
+                onClick={incrementQuantity}
+              >
+                +
+              </button>
+            </div>
+          </div>
           <button
-            onClick={() => addToCart(productData._id, size)}
+            onClick={handleAddToCart}
             className="w-full rounded-md bg-black px-8 py-3 text-white transition-colors duration-300 hover:bg-gray-800 sm:w-auto"
           >
             ADD TO CART
@@ -106,6 +148,7 @@ const Product = () => {
           </div>
         </div>
       </div>
+
       {/* Description and Reviews Section */}
       <div className="mt-16">
         <div className="flex border-b">
@@ -136,6 +179,7 @@ const Product = () => {
           </ul>
         </div>
       </div>
+
       {/* Related Products Section */}
       <RelatedProduct
         category={productData?.category}
