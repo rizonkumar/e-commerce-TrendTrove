@@ -8,34 +8,32 @@ const CartTotal = () => {
   const subtotal = getCartAmount();
   const total = subtotal + delivery_fee;
 
+  const renderAmount = (amount) => (
+    <span className="flex items-center">
+      <FaRupeeSign className="mr-1" />
+      {amount.toFixed(2)}
+    </span>
+  );
+
   return (
     <div className="w-full">
-      <div className="mb-6">
+      <div className="mb-4">
         <Title text1="TOTAL" text2="AMOUNT" />
       </div>
-      <div className="mt-2 flex flex-col gap-2 text-sm">
-        <div className="flex justify-between">
-          <p>Subtotal</p>
-          <p className="flex items-center">
-            <FaRupeeSign className="mr-1" />
-            {subtotal.toFixed(2)}
-          </p>
+      <div className="mt-2 flex flex-col gap-3 text-sm">
+        <div className="flex items-center justify-between">
+          <p className="text-gray-600">Subtotal</p>
+          {renderAmount(subtotal)}
         </div>
-        <hr />
-        <div className="flex justify-between">
-          <p>Shipping Fee</p>
-          <p className="flex items-center">
-            <FaRupeeSign className="mr-1" />
-            {delivery_fee.toFixed(2)}
-          </p>
+        <div className="flex items-center justify-between">
+          <p className="text-gray-600">Shipping Fee</p>
+          {renderAmount(delivery_fee)}
         </div>
-        <hr />
-        <div className="flex justify-between font-bold">
-          <p>Total</p>
-          <p className="flex items-center">
-            <FaRupeeSign className="mr-1" />
-            {total.toFixed(2)}
-          </p>
+        <div className="mt-2 border-t pt-3">
+          <div className="flex items-center justify-between text-base font-bold">
+            <p>Total</p>
+            {renderAmount(total)}
+          </div>
         </div>
       </div>
     </div>
