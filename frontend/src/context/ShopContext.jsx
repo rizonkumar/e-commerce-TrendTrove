@@ -11,7 +11,7 @@ const ShopContextProvider = (props) => {
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
 
-  const addToCart = async (itemId, size) => {
+  const addToCart = async (itemId, size, quantity) => {
     if (!size) {
       toast.error("Please Select Product Size");
       return;
@@ -21,13 +21,13 @@ const ShopContextProvider = (props) => {
 
     if (cartData[itemId]) {
       if (cartData[itemId][size]) {
-        cartData[itemId][size] += 1;
+        cartData[itemId][size] += quantity;
       } else {
-        cartData[itemId][size] = 1;
+        cartData[itemId][size] = quantity;
       }
     } else {
       cartData[itemId] = {};
-      cartData[itemId][size] = 1;
+      cartData[itemId][size] = quantity;
     }
     setCartItems(cartData);
   };
