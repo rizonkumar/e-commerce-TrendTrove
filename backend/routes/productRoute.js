@@ -14,6 +14,6 @@ productRouter.get('/all', getAllProducts);
 productRouter.delete('/remove', removeProduct);
 
 // Route to get a single product
-productRouter.get('/single', getSingleProduct);
+productRouter.post('/single', getSingleProduct);
 
 export default productRouter;

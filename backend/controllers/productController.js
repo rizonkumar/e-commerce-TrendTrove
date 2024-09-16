@@ -44,10 +44,8 @@ const getAllProducts = async (req, res) => {
 
 // Function to remove product
 const removeProduct = async (req, res) => {
-    console.log("cccc")
     try {
         await productModel.findByIdAndDelete(req.body.id);
-        console.log("dddd")
         res.status(200).json({success: true, message: "Product removed successfully"})
     } catch (error) {
         console.log(error);
@@ -56,6 +54,15 @@ const removeProduct = async (req, res) => {
  }
 
 // Function to get single product
-const getSingleProduct = async (req, res) => { }
+const getSingleProduct = async (req, res) => {
+    try {
+        const {productId} = req.body;
+        const product = await productModel.findById(productId);
+        res.status(200).json({ product, success: true, message: "Product fetched successfully" })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "Internal server error", error: error });
+    }
+ }
 
 export { addProduct, getAllProducts, removeProduct, getSingleProduct };
