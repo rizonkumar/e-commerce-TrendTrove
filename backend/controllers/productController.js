@@ -34,9 +34,11 @@ const addProduct = async (req, res) => {
 // Function to get all products
 const getAllProducts = async (req, res) => {
     try {
-
+        const products = await productModel.find({});
+        res.json({ products, success: true, message: "All products fetched successfully" })
     } catch (error) {
-
+        console.log(error);
+        res.json({ success: false, message: "Internal server error", error: error });
     }
  }
 
