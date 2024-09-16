@@ -35,15 +35,25 @@ const addProduct = async (req, res) => {
 const getAllProducts = async (req, res) => {
     try {
         const products = await productModel.find({});
-        res.json({ products, success: true, message: "All products fetched successfully" })
+        res.status(200).json({ products, success: true, message: "All products fetched successfully" })
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Internal server error", error: error });
+        res.status(500).json({ success: false, message: "Internal server error", error: error });
     }
  }
 
 // Function to remove product
-const removeProduct = async (req, res) => { }
+const removeProduct = async (req, res) => {
+    console.log("cccc")
+    try {
+        await productModel.findByIdAndDelete(req.body.id);
+        console.log("dddd")
+        res.status(200).json({success: true, message: "Product removed successfully"})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: "Internal server error", error: error });
+    }
+ }
 
 // Function to get single product
 const getSingleProduct = async (req, res) => { }

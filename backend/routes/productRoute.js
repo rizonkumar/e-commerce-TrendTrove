@@ -11,9 +11,9 @@ productRouter.post('/add', upload.fields([{ name: 'image1', maxCount: 1 }, {name
 productRouter.get('/all', getAllProducts);
 
 // Route to remove a product
-productRouter.delete('/remove/:id', removeProduct);
+productRouter.delete('/remove', removeProduct);
 
 // Route to get a single product
-productRouter.get('/single/:id', getSingleProduct);
+productRouter.get('/single', getSingleProduct);
 
 export default productRouter;
