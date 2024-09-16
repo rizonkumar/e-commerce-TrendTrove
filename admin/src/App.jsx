@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import NavBar from "./components/NavBar";
 import SideBar from "./components/SideBar";
 import { Routes, Route } from "react-router-dom";
@@ -6,29 +6,45 @@ import Add from "./pages/Add";
 import List from "./pages/List";
 import Order from "./pages/Order";
 import Login from "./components/Login";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const backendUrl = "http://localhost:5000";
+export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const App = () => {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem("token", token);
+  }, [token]);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <ToastContainer />
       {token === "" ? (
-        <Login />
+        <Login setToken={setToken} />
       ) : (
-        <>
-          <NavBar />
-          <hr className="" />
-          <div className="flex w-full">
-            <SideBar />
-            <div className="ml-[max(5vw, 25px)] mx-auto my-8 w-[70%] text-base text-gray-600">
+        <div className="flex h-screen flex-col">
+          <NavBar setToken={setToken} toggleSidebar={toggleSidebar} />
+          <div className="flex flex-1 overflow-hidden">
+            <SideBar
+              isOpen={isSidebarOpen}
+              closeSidebar={() => setIsSidebarOpen(false)}
+            />
+            <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 p-4">
               <Routes>
-                <Route path="/add" element={<Add />} />
-                <Route path="/lists" element={<List />} />
-                <Route path="/orders" element={<Order />} />
+                <Route path="/add" element={<Add token={token} />} />
+                <Route path="/lists" element={<List token={token} />} />
+                <Route path="/orders" element={<Order token={token} />} />
               </Routes>
-            </div>
+            </main>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
