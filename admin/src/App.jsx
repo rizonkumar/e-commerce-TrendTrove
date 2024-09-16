@@ -10,14 +10,18 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
 const App = () => {
-  const [token, setToken] = useState(
-    localStorage.getItem("token") ? localStorage.getItem("token") : "",
-  );
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("token", token);
   }, [token]);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -25,20 +29,22 @@ const App = () => {
       {token === "" ? (
         <Login setToken={setToken} />
       ) : (
-        <>
-          <NavBar setToken={setToken} />
-          <hr className="" />
-          <div className="flex w-full">
-            <SideBar />
-            <div className="ml-[max(5vw, 25px)] mx-auto my-8 w-[70%] text-base text-gray-600">
+        <div className="flex h-screen flex-col">
+          <NavBar setToken={setToken} toggleSidebar={toggleSidebar} />
+          <div className="flex flex-1 overflow-hidden">
+            <SideBar
+              isOpen={isSidebarOpen}
+              closeSidebar={() => setIsSidebarOpen(false)}
+            />
+            <main className="flex-1 overflow-y-auto overflow-x-hidden bg-gray-100 p-4">
               <Routes>
                 <Route path="/add" element={<Add token={token} />} />
                 <Route path="/lists" element={<List token={token} />} />
                 <Route path="/orders" element={<Order token={token} />} />
               </Routes>
-            </div>
+            </main>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
