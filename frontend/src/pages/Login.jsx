@@ -30,6 +30,8 @@ const Login = () => {
         const token = response.data.token;
         localStorage.setItem("token", token);
         setToken(token);
+        getProductsData(); // Add this
+        getUserCart(token); // Add this
         toast.success(response.data.message);
         navigate("/");
       } else {
