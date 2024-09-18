@@ -8,6 +8,8 @@ import {
 } from "../controllers/productController.js";
 import upload from "../middleware/multer.js";
 import adminAuth from "../middleware/adminAuth.js";
+import authMiddleware from "../middleware/authMiddleware.js";
+import adminAuthMiddleware from "../middleware/adminAuthMiddleware.js";
 
 const productRouter = express.Router();
 
@@ -24,14 +26,20 @@ productRouter.post(
   addProduct
 );
 
-// Route to get all products
+// Public route for all users (no auth required)
 productRouter.get("/all", adminAuth, getAllProducts);
+
+// Protected route (requires authentication)
+productRouter.get("/user", authMiddleware, getAllProducts);
 
 // Route to remove a product
 productRouter.delete("/remove", adminAuth, removeProduct);
 
 // Route to get a single product
 productRouter.post("/single", adminAuth, getSingleProduct);
+
+// Admin route
+productRouter.get("/admin/products", adminAuthMiddleware, getAllProducts);
 
 // Route to update a product
 productRouter.put(

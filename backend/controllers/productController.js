@@ -58,6 +58,7 @@ const addProduct = async (req, res) => {
 // Function to get all products
 const getAllProducts = async (req, res) => {
   try {
+    console.log("Hello");
     const products = await productModel.find({});
     res.status(200).json({
       products,

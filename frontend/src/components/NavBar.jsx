@@ -11,10 +11,27 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import ProfileDropdown from "./ProfileDropdown";
+import { toast } from "react-toastify";
 
 const NavBar = () => {
   const [visible, setVisible] = useState(false);
-  const { setShowSearch, getCartTotal } = useContext(ShopContext);
+  const {
+    setShowSearch,
+    getCartTotal,
+    navigate,
+    token,
+    setToken,
+    setCartItems,
+  } = useContext(ShopContext);
+
+  const handleLogout = () => {
+    navigate("/login");
+    localStorage.removeItem("token");
+    setToken("");
+    setVisible(false);
+    // setCartItems({}); // even the cart it should be emoty but when i comment this i am getting error
+    toast.success("Logged out successfully");
+  };
 
   const toggleSidebar = () => {
     setVisible(!visible);
@@ -119,9 +136,7 @@ const NavBar = () => {
             Orders
           </NavLink>
           <button
-            onClick={() => {
-              /* Handle logout */
-            }}
+            onClick={handleLogout}
             className="flex w-full items-center px-5 py-4 text-left text-lg"
           >
             <FaSignOutAlt className="mr-2" />
