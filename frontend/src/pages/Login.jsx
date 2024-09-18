@@ -15,10 +15,16 @@ const Login = () => {
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post(`${backendUrl}/api/user/login`, {
-        email,
-        password,
-      });
+      const endpoint = currentState === "Login" ? "login" : "register";
+      const payload =
+        currentState === "Login"
+          ? { email, password }
+          : { name, email, password };
+
+      const response = await axios.post(
+        `${backendUrl}/api/user/${endpoint}`,
+        payload,
+      );
 
       if (response.data.success) {
         const token = response.data.token;
