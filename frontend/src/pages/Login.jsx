@@ -1,15 +1,45 @@
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { assets } from "../assets/assets";
 import { Link } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [currentState, setCurrentState] = useState("Sign Up");
+  const { token, setToken, navigate, backendUrl } = useContext(ShopContext);
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
-    // Handle form submission
+    try {
+      const response = await axios.post(`${backendUrl}/api/user/login`, {
+        email,
+        password,
+      });
+
+      if (response.data.success) {
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        setToken(token);
+        toast.success(response.data.message);
+        navigate("/");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "An error occurred");
+    }
   };
 
+  useEffect(() => {
+    if (token) {
+      navigate("/");
+    }
+  }, [token]);
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -28,6 +58,8 @@ const Login = () => {
             {currentState === "Sign Up" && (
               <div>
                 <input
+                  onChange={(e) => setName(e.target.value)}
+                  value={name}
                   type="text"
                   placeholder="Name"
                   required
@@ -37,6 +69,8 @@ const Login = () => {
             )}
             <div>
               <input
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
                 type="email"
                 placeholder="Email address"
                 required
@@ -45,6 +79,8 @@ const Login = () => {
             </div>
             <div>
               <input
+                onChange={(e) => setPassword(e.target.value)}
+                value={password}
                 type="password"
                 placeholder="Password"
                 required
