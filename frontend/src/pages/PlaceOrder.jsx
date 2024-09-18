@@ -7,11 +7,29 @@ import { MdLocationOn, MdEmail, MdPhone, MdPerson } from "react-icons/md";
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState("cod");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    streetAddress: "",
+    city: "",
+    state: "",
+    zipcode: "",
+    country: "",
+    contactNumber: "",
+  });
+
+  const onChangeHandler = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
   const { navigate } = useContext(ShopContext);
 
   const renderInputField = (type, placeholder, icon, className = "") => (
     <div className="relative">
       <input
+        onChange={onChangeHandler}
         type={type}
         placeholder={placeholder}
         className={`w-full rounded-md border border-gray-300 px-3.5 py-2 pl-10 ${className}`}
@@ -43,7 +61,7 @@ const PlaceOrder = () => {
   );
 
   return (
-    <div className="flex min-h-[80vh] flex-col justify-between gap-8 border-t pt-8 lg:flex-row">
+    <form className="flex min-h-[80vh] flex-col justify-between gap-8 border-t pt-8 lg:flex-row">
       {/* Left Side Section */}
       <div className="flex w-full flex-col gap-4 sm:max-w-[480px]">
         <div className="my-3 text-xl sm:text-2xl">
@@ -88,7 +106,7 @@ const PlaceOrder = () => {
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 
