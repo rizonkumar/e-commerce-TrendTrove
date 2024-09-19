@@ -4,6 +4,8 @@ import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
 import { FaStripe, FaCcAmazonPay, FaMoneyBillWave } from "react-icons/fa";
 import { MdLocationOn, MdEmail, MdPhone, MdPerson } from "react-icons/md";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState("cod");
@@ -19,17 +21,56 @@ const PlaceOrder = () => {
     contactNumber: "",
   });
 
-  const onChangeHandler = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const { navigate, cartItems, getCartAmount, backendUrl, token } =
+    useContext(ShopContext);
+
+  const handlePlaceOrder = async () => {
+    try {
+      const address = {
+        streetAddress: formData.streetAddress,
+        city: formData.city,
+        state: formData.state,
+        zipcode: formData.zipcode,
+        country: formData.country,
+      };
+
+      const orderData = {
+        items: cartItems,
+        amount: getCartAmount(),
+        address,
+      };
+
+      let endpoint;
+      switch (method) {
+        case "stripe":
+          endpoint = "/api/order/placeOrderStripe";
+          break;
+        case "razorpay":
+          endpoint = "/api/order/placeOrderRazorpay";
+          break;
+        default:
+          endpoint = "/api/order/placeOrder";
+      }
+
+      const response = await axios.post(`${backendUrl}${endpoint}`, orderData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.data.success) {
+        toast.success("Order placed successfully");
+        navigate("/orders");
+      } else {
+        toast.error("Failed to place order");
+      }
+    } catch (error) {
+      console.error("Error placing order:", error);
+      toast.error("An error occurred while placing the order");
+    }
   };
-  const { navigate } = useContext(ShopContext);
 
   const renderInputField = (type, placeholder, icon, className = "") => (
     <div className="relative">
       <input
-        onChange={onChangeHandler}
         type={type}
         placeholder={placeholder}
         className={`w-full rounded-md border border-gray-300 px-3.5 py-2 pl-10 ${className}`}
@@ -61,7 +102,10 @@ const PlaceOrder = () => {
   );
 
   return (
-    <form className="flex min-h-[80vh] flex-col justify-between gap-8 border-t pt-8 lg:flex-row">
+    <form
+      onSubmit={(e) => e.preventDefault()}
+      className="flex min-h-[80vh] flex-col justify-between gap-8 border-t pt-8 lg:flex-row"
+    >
       {/* Left Side Section */}
       <div className="flex w-full flex-col gap-4 sm:max-w-[480px]">
         <div className="my-3 text-xl sm:text-2xl">
@@ -99,7 +143,7 @@ const PlaceOrder = () => {
             )}
           </div>
           <button
-            onClick={() => navigate("/orders")}
+            onClick={handlePlaceOrder}
             className="mt-8 w-full rounded-md bg-black py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
           >
             PLACE ORDER

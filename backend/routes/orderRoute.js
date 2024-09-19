@@ -6,21 +6,21 @@ import {
   allOrders,
   userOrders,
   updateStatus,
+  getOrderDetails,
 } from "../controllers/orderController.js";
-import adminAuth from "../middlewares/adminAuth.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
+import authMiddleware from "../middleware/authMiddleware.js";
+import adminAuth from "../middleware/adminAuth.js";
+
 const orderRouter = express.Router();
 
-// Admin Features
-orderRouter.get("/allOrders", adminAuth, allOrders);
-orderRouter.put("/updateStatus", adminAuth, updateStatus);
+orderRouter.post("/placeOrder", authMiddleware, (req, res, next) => {
+  placeOrder(req, res, next);
+});
 
-// Payment Features
-orderRouter.post("/placeOrder", authMiddleware, placeOrder);
 orderRouter.post("/placeOrderStripe", authMiddleware, placeOrderStripe);
 orderRouter.post("/placeOrderRazorpay", authMiddleware, placeOrderRazorpay);
-
-// User Features
 orderRouter.get("/userOrder", authMiddleware, userOrders);
-
+orderRouter.get("/allOrders", adminAuth, allOrders);
+orderRouter.put("/updateStatus", adminAuth, updateStatus);
+orderRouter.get("/:orderId", authMiddleware, getOrderDetails);
 export default orderRouter;

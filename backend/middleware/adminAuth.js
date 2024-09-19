@@ -1,4 +1,3 @@
-import express from "express";
 import jwt from "jsonwebtoken";
 
 const adminAuth = async (req, res, next) => {
@@ -7,19 +6,19 @@ const adminAuth = async (req, res, next) => {
     if (!token) {
       return res
         .status(401)
-        .json({ message: "Unauthorized access", sucess: false });
+        .json({ message: "Unauthorized access", success: false });
     }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (decoded !== process.env.ADMIN_EMAIL + process.env.ADMIN_PASSWORD) {
+    if (decoded.email !== process.env.ADMIN_EMAIL) {
       return res
         .status(401)
-        .json({ message: "Unauthorized access", sucess: false });
+        .json({ message: "Unauthorized access", success: false });
     }
     next();
   } catch (error) {
     return res
-      .status(500)
-      .json({ message: "Internal server error", sucess: false });
+      .status(401)
+      .json({ message: "Invalid or expired token", success: false });
   }
 };
 
