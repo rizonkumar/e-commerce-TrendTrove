@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
@@ -21,10 +21,37 @@ const PlaceOrder = () => {
     contactNumber: "",
   });
 
-  const { navigate, cartItems, getCartAmount, backendUrl, token } =
-    useContext(ShopContext);
+  const { 
+    navigate, 
+    cartItems, 
+    getCartAmount, 
+    backendUrl, 
+    token, 
+    setToken,
+    getUserCart
+  } = useContext(ShopContext);
+
+  useEffect(() => {
+    // If user logs in, fetch their cart
+    if (token) {
+      getUserCart(token);
+    }
+  }, [token]);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handlePlaceOrder = async () => {
+    if (!token) {
+      toast.error("Please log in to place an order");
+      // Save current cart to localStorage before redirecting
+      localStorage.setItem('tempCart', JSON.stringify(cartItems));
+      navigate("/login");
+      return;
+    }
+
     try {
       const address = {
         streetAddress: formData.streetAddress,
@@ -68,12 +95,16 @@ const PlaceOrder = () => {
     }
   };
 
-  const renderInputField = (type, placeholder, icon, className = "") => (
+  const renderInputField = (type, name, placeholder, icon) => (
     <div className="relative">
       <input
         type={type}
+        name={name}
+        value={formData[name]}
+        onChange={handleInputChange}
         placeholder={placeholder}
-        className={`w-full rounded-md border border-gray-300 px-3.5 py-2 pl-10 ${className}`}
+        className="w-full rounded-md border border-gray-300 px-3.5 py-2 pl-10"
+        required
       />
       {icon && (
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -101,6 +132,21 @@ const PlaceOrder = () => {
     </div>
   );
 
+  if (!token) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h2 className="text-2xl font-bold mb-4">Please Log In to Place an Order</h2>
+        <p className="mb-4">Your cart items will be saved for after you log in.</p>
+        <button
+          onClick={() => navigate("/login")}
+          className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors"
+        >
+          Go to Login
+        </button>
+      </div>
+    );
+  }
+
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
@@ -112,20 +158,20 @@ const PlaceOrder = () => {
           <Title text1={"Delivery"} text2={"Information"} />
         </div>
         <div className="flex gap-3">
-          {renderInputField("text", "First Name", <MdPerson />)}
-          {renderInputField("text", "Last Name", <MdPerson />)}
+          {renderInputField("text", "firstName", "First Name", <MdPerson />)}
+          {renderInputField("text", "lastName", "Last Name", <MdPerson />)}
         </div>
-        {renderInputField("email", "Email Address", <MdEmail />)}
-        {renderInputField("text", "Street Address", <MdLocationOn />)}
+        {renderInputField("email", "email", "Email Address", <MdEmail />)}
+        {renderInputField("text", "streetAddress", "Street Address", <MdLocationOn />)}
         <div className="flex gap-3">
-          {renderInputField("text", "City", <MdLocationOn />)}
-          {renderInputField("text", "State", <MdLocationOn />)}
+          {renderInputField("text", "city", "City", <MdLocationOn />)}
+          {renderInputField("text", "state", "State", <MdLocationOn />)}
         </div>
         <div className="flex gap-3">
-          {renderInputField("number", "Zipcode", <MdLocationOn />)}
-          {renderInputField("text", "Country", <MdLocationOn />)}
+          {renderInputField("text", "zipcode", "Zipcode", <MdLocationOn />)}
+          {renderInputField("text", "country", "Country", <MdLocationOn />)}
         </div>
-        {renderInputField("tel", "Contact Number", <MdPhone />)}
+        {renderInputField("tel", "contactNumber", "Contact Number", <MdPhone />)}
       </div>
 
       {/* Right Side Section */}
@@ -136,11 +182,7 @@ const PlaceOrder = () => {
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {renderPaymentMethod("stripe", <FaStripe />, "Stripe")}
             {renderPaymentMethod("razorpay", <FaCcAmazonPay />, "Razorpay")}
-            {renderPaymentMethod(
-              "cod",
-              <FaMoneyBillWave />,
-              "Cash on Delivery",
-            )}
+            {renderPaymentMethod("cod", <FaMoneyBillWave />, "Cash on Delivery")}
           </div>
           <button
             onClick={handlePlaceOrder}

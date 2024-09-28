@@ -107,14 +107,27 @@ const ShopContextProvider = (props) => {
     return totalAmount;
   };
 
-  const getProductsData = async (productIds = []) => {
+  // const getProductsData = async (productIds = []) => {
+  //   try {
+  //     const response = await axios.get(`${backendUrl}/api/product/user`, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       params: productIds.length > 0 ? { ids: productIds.join(",") } : {},
+  //     });
+  //     if (response.data.success) {
+  //       setProducts(response.data.products);
+  //     } else {
+  //       toast.error(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching products:", error);
+  //   }
+  // };
+
+  const getProductsData = async () => {
     try {
-      const response = await axios.get(`${backendUrl}/api/product/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: productIds.length > 0 ? { ids: productIds.join(",") } : {},
-      });
+      const response = await axios.get(`${backendUrl}/api/product/all`);
       if (response.data.success) {
         setProducts(response.data.products);
       } else {
@@ -147,11 +160,13 @@ const ShopContextProvider = (props) => {
     }
   };
 
+  const saveCartToLocalStorage = (cart) => {
+    localStorage.setItem('tempCart', JSON.stringify(cart));
+  };
+
   useEffect(() => {
-    if (token) {
-      getProductsData();
-    }
-  }, [token]);
+    getProductsData();
+  }, []);
 
   useEffect(() => {
     if (!token && localStorage.getItem("token")) {

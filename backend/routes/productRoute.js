@@ -27,7 +27,7 @@ productRouter.post(
 );
 
 // Public route for all users (no auth required)
-productRouter.get("/all", adminAuth, getAllProducts);
+productRouter.get("/all", getAllProducts);
 
 // Protected route (requires authentication)
 productRouter.get("/user", authMiddleware, getAllProducts);
