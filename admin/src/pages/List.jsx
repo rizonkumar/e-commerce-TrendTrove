@@ -13,7 +13,7 @@ const List = ({ token }) => {
     try {
       setLoading(true);
       const response = await axios.get(`${backendUrl}/api/product/all`, {
-        headers: { token },
+        headers: { Authorization: `Bearer ${token}` },
       });
       setProducts(response.data.products);
       toast.success(response.data.message);

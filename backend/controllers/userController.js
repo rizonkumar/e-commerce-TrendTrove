@@ -3,8 +3,8 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+const createToken = (id, email) => {
+  return jwt.sign({ id, email }, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
 
 // Route for user login
