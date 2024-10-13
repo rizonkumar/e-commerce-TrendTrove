@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
@@ -21,33 +21,24 @@ const PlaceOrder = () => {
     contactNumber: "",
   });
 
-  const { 
-    navigate, 
-    cartItems, 
-    getCartAmount, 
-    backendUrl, 
-    token, 
-    setToken,
-    getUserCart
-  } = useContext(ShopContext);
+  const { navigate, cartItems, getCartAmount, backendUrl, token } =
+    useContext(ShopContext);
 
   useEffect(() => {
-    // If user logs in, fetch their cart
-    if (token) {
-      getUserCart(token);
+    if (!token) {
+      // If there's no token, save the current cart to localStorage
+      localStorage.setItem("tempCart", JSON.stringify(cartItems));
     }
-  }, [token]);
+  }, [token, cartItems]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handlePlaceOrder = async () => {
     if (!token) {
       toast.error("Please log in to place an order");
-      // Save current cart to localStorage before redirecting
-      localStorage.setItem('tempCart', JSON.stringify(cartItems));
       navigate("/login");
       return;
     }
@@ -134,12 +125,16 @@ const PlaceOrder = () => {
 
   if (!token) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h2 className="text-2xl font-bold mb-4">Please Log In to Place an Order</h2>
-        <p className="mb-4">Your cart items will be saved for after you log in.</p>
+      <div className="flex min-h-screen flex-col items-center justify-center">
+        <h2 className="mb-4 text-2xl font-bold">
+          Please Log In to Place an Order
+        </h2>
+        <p className="mb-4">
+          Your cart items will be saved for after you log in.
+        </p>
         <button
           onClick={() => navigate("/login")}
-          className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors"
+          className="rounded-md bg-black px-6 py-2 text-white transition-colors hover:bg-gray-800"
         >
           Go to Login
         </button>
@@ -162,7 +157,12 @@ const PlaceOrder = () => {
           {renderInputField("text", "lastName", "Last Name", <MdPerson />)}
         </div>
         {renderInputField("email", "email", "Email Address", <MdEmail />)}
-        {renderInputField("text", "streetAddress", "Street Address", <MdLocationOn />)}
+        {renderInputField(
+          "text",
+          "streetAddress",
+          "Street Address",
+          <MdLocationOn />,
+        )}
         <div className="flex gap-3">
           {renderInputField("text", "city", "City", <MdLocationOn />)}
           {renderInputField("text", "state", "State", <MdLocationOn />)}
@@ -171,7 +171,12 @@ const PlaceOrder = () => {
           {renderInputField("text", "zipcode", "Zipcode", <MdLocationOn />)}
           {renderInputField("text", "country", "Country", <MdLocationOn />)}
         </div>
-        {renderInputField("tel", "contactNumber", "Contact Number", <MdPhone />)}
+        {renderInputField(
+          "tel",
+          "contactNumber",
+          "Contact Number",
+          <MdPhone />,
+        )}
       </div>
 
       {/* Right Side Section */}
@@ -182,7 +187,11 @@ const PlaceOrder = () => {
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {renderPaymentMethod("stripe", <FaStripe />, "Stripe")}
             {renderPaymentMethod("razorpay", <FaCcAmazonPay />, "Razorpay")}
-            {renderPaymentMethod("cod", <FaMoneyBillWave />, "Cash on Delivery")}
+            {renderPaymentMethod(
+              "cod",
+              <FaMoneyBillWave />,
+              "Cash on Delivery",
+            )}
           </div>
           <button
             onClick={handlePlaceOrder}

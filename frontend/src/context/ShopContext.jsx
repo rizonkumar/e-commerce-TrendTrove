@@ -64,7 +64,9 @@ const ShopContextProvider = (props) => {
           if (cartItems[items][item] > 0) {
             totalCount += cartItems[items][item];
           }
-        } catch (error) {}
+        } catch (error) {
+          console.log("Error calculating cart total:", error);
+        }
       }
     }
     return totalCount;
@@ -151,8 +153,6 @@ const ShopContextProvider = (props) => {
       );
       if (response.data.success) {
         setCartItems(response.data.cartData);
-        const productIds = Object.keys(response.data.cartData);
-        await getProductsData(productIds);
       }
     } catch (error) {
       console.log(error);
@@ -160,8 +160,27 @@ const ShopContextProvider = (props) => {
     }
   };
 
-  const saveCartToLocalStorage = (cart) => {
-    localStorage.setItem('tempCart', JSON.stringify(cart));
+  // const saveCartToLocalStorage = (cart) => {
+  //   localStorage.setItem("tempCart", JSON.stringify(cart));
+  // };
+
+  const mergeGuestCartWithUserCart = async (guestCart) => {
+    if (token && guestCart) {
+      try {
+        await axios.post(
+          `${backendUrl}/api/cart/merge`,
+          { guestCart },
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        // After merging, fetch the updated user cart
+        await getUserCart(token);
+        // Clear the guest cart from localStorage
+        localStorage.removeItem("tempCart");
+      } catch (error) {
+        console.error("Error merging carts:", error);
+        toast.error("Failed to merge carts");
+      }
+    }
   };
 
   useEffect(() => {
@@ -179,6 +198,15 @@ const ShopContextProvider = (props) => {
   useEffect(() => {
     if (token) {
       getUserCart(token);
+      const guestCart = JSON.parse(localStorage.getItem("tempCart"));
+      if (guestCart) {
+        mergeGuestCartWithUserCart(guestCart);
+      }
+    } else {
+      const guestCart = JSON.parse(localStorage.getItem("tempCart"));
+      if (guestCart) {
+        setCartItems(guestCart);
+      }
     }
   }, [token]);
 
@@ -201,11 +229,13 @@ const ShopContextProvider = (props) => {
     setIsLoggedIn,
     token,
     setToken,
+    mergeGuestCartWithUserCart,
     getProductsData,
     getUserCart,
   };
 
   return (
+    // eslint-disable-next-line react/prop-types
     <ShopContext.Provider value={value}>{props.children}</ShopContext.Provider>
   );
 };

@@ -12,8 +12,8 @@ const Login = () => {
     setToken,
     navigate,
     backendUrl,
-    getProductsData,
     getUserCart,
+    mergeGuestCartWithUserCart,
   } = useContext(ShopContext);
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -37,8 +37,16 @@ const Login = () => {
         const token = response.data.token;
         localStorage.setItem("token", token);
         setToken(token);
-        getProductsData(); // Add this
-        getUserCart(token); // Add this
+
+        // Merge guest cart with user cart after successful login
+        const guestCart = JSON.parse(localStorage.getItem("tempCart"));
+        if (guestCart) {
+          await mergeGuestCartWithUserCart(guestCart);
+        } else {
+          // If there's no guest cart, fetch the user's cart
+          await getUserCart(token);
+        }
+
         toast.success(response.data.message);
         navigate("/");
       } else {
@@ -55,6 +63,7 @@ const Login = () => {
       navigate("/");
     }
   }, [token]);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
