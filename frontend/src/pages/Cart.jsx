@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
-import { FaMinus, FaPlus, FaTrash } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { FaMinus, FaPlus, FaShoppingCart, FaTrash } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import ShimmerUI from "../components/ShimmerUI";
 
 const Cart = () => {
@@ -38,6 +38,25 @@ const Cart = () => {
       <div className="w-full border-t pt-8">
         <Title text1="Your" text2="Cart" />
         <ShimmerUI />
+      </div>
+    );
+  }
+  const cartIsEmpty = Object.keys(cartItems).length === 0;
+
+  if (cartIsEmpty) {
+    return (
+      <div className="flex min-h-[60vh] w-full flex-col items-center justify-center border-t pt-8">
+        <Title text1="Your" text2="Cart" />
+        <div className="mt-8 text-center">
+          <FaShoppingCart className="mx-auto mb-4 text-6xl text-gray-300" />
+          <p className="mb-6 text-xl text-gray-600">Your cart is empty</p>
+          <Link
+            to="/collection"
+            className="rounded-full bg-black px-6 py-3 text-white transition duration-300 hover:bg-gray-800"
+          >
+            Continue Shopping
+          </Link>
+        </div>
       </div>
     );
   }
