@@ -1,4 +1,3 @@
-```markdown
 # E-Commerce TrendTrove
 
 ## Project Overview
